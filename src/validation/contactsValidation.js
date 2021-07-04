@@ -10,6 +10,7 @@ const schemaAddContact = Joi.object({
     .min(7)
     .max(13)
     .required(),
+  favorite: Joi.boolean().optional(),
 })
 
 const schemaUpdateContact = Joi.object({
@@ -22,6 +23,11 @@ const schemaUpdateContact = Joi.object({
     .min(7)
     .max(13)
     .optional(),
+  favorite: Joi.boolean().optional(),
+})
+
+const schemaUpdateStatusContact = Joi.object({
+  favorite: Joi.boolean().required(),
 })
 
 const validate = (schema, body, next) => {
@@ -37,6 +43,10 @@ module.exports.validateCreateContact = (req, res, next) => {
   return validate(schemaAddContact, req.body, next)
 }
 
-module.exports.validateUpdateContact = (req, res, next) => {
+module.exports.validateUpdateStatusContact = (req, res, next) => {
   return validate(schemaUpdateContact, req.body, next)
+}
+
+module.exports.validateUpdateContact = (req, res, next) => {
+  return validate(schemaUpdateStatusContact, req.body, next)
 }
