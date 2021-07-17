@@ -8,12 +8,13 @@ const {
 } = require('../services/contactsService')
 
 const getContactsController = async (req, res) => {
-  const contacts = await getContacts()
+  const { _id } = req.user
+  const contacts = await getContacts(_id)
   res.status(200).json(contacts)
 }
 
 const getContactsByIdController = async (req, res) => {
-  const contact = await getContactById(req.params.contactId)
+  const contact = await getContactById(req.params.contactId, req.user._id)
   if (!contact) {
     return res.status(404).json({ message: 'Not found' })
   }
@@ -21,17 +22,21 @@ const getContactsByIdController = async (req, res) => {
 }
 
 const addContactController = async (req, res) => {
-  const contacts = await addContact(req.body)
-  res.status(201).json(contacts)
+  await addContact(req.body, req.user._id)
+  res.status(201).json({ status: 'success' })
 }
 
 const deleteContactController = async (req, res) => {
-  await deleteContactById(req.params.contactId)
+  await deleteContactById(req.params.contactId, req.user._id)
   res.status(200).json({ status: 'success' })
 }
 
 const changeContactController = async (req, res) => {
-  const contacts = await changeContactById(req.params.contactId, req.body)
+  const contacts = await changeContactById(
+    req.params.contactId,
+    req.body,
+    req.user._id
+  )
   if (!contacts) {
     return res.status(404).json({ message: 'Not found' })
   }
@@ -43,7 +48,8 @@ const updateStatusContactController = async (req, res) => {
   }
   const updatedContact = await updateStatusContact(
     req.params.contactId,
-    req.body
+    req.body,
+    req.user._id
   )
   res.status(200).json(updatedContact)
 }
