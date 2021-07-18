@@ -12,7 +12,21 @@ const getCurrentUser = async (userId) => {
     throw new Error(error)
   }
 }
-
+const updateUserAvatar = async (userId, avatarUrl) => {
+  try {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: { avatarURL: avatarUrl },
+      },
+      { new: true, omitUndefined: true }
+    )
+    return avatarUrl
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 module.exports = {
   getCurrentUser,
+  updateUserAvatar,
 }
